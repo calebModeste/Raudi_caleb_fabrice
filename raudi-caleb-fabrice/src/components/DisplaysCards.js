@@ -11,12 +11,10 @@ export default function DisplaysCards() {
     const data = await response.json();
     console.log(data);
 
-    setCars(data.slice(1, 4));
+    setCars(data.slice(0, 4));
   };
 
   useEffect(() => {
-    console.log("test");
-
     getCars();
   }, []);
 

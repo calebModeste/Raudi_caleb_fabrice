@@ -5,6 +5,7 @@ import Layout from "./components/Layout";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
+import CarId from "./pages/CarId";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Layout children={<Homepage />} />} />
+          <Route path="/cars/:id" element={<Layout children={<CarId />} />} />
           <Route
             path="/dashboard"
             element={<Layout children={<Dashboard />} />}
