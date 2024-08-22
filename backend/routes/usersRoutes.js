@@ -10,6 +10,8 @@ const usersController = require("../controller/usersController");
 ======================*/
 router.get('/users', usersController.getUserAll)
 router.get('/users/:id',usersController.getUserById)
+router.post('/login',usersController.login)
+router.post('/register',usersController.register)
 
 
 
