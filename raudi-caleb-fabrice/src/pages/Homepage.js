@@ -12,7 +12,7 @@ export default function Homepage() {
           alt="audi"
         />
       </div>
-      <div cl className=" z-50 mb-0 pb-0">
+      <div className=" z-50 mb-0 pb-0">
         <Models />
       </div>
     </div>

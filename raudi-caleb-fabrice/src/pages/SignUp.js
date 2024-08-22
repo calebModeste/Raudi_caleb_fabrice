@@ -74,7 +74,11 @@ export default function SignUp() {
                 my <span className="text-red-500">Raudi</span>
               </h1>
 
-              <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+              <form
+                onSubmit={handleSubmit}
+                autocomplete="false"
+                className="flex flex-col gap-8"
+              >
                 <input
                   className={`px-1 py-2 border-b-[1px] outline-none ${
                     emailErr ? "border-red-500" : "border-black"
@@ -84,6 +88,7 @@ export default function SignUp() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Nom et Prénom"
                   required
+                  autocomplete="false"
                 />
                 <input
                   className={`px-1 py-2 border-b-[1px] outline-none ${
@@ -94,6 +99,7 @@ export default function SignUp() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
                   required
+                  autocomplete="false"
                 />
                 {emailErr && (
                   <span className="text-red-500">Email non valide</span>
@@ -107,6 +113,8 @@ export default function SignUp() {
                   onChange={(e) => setPswd(e.target.value)}
                   placeholder="Mot de passe"
                   required
+                  autocomplete="new-password"
+                  auto
                 />
                 <input
                   className={`px-1 py-2 border-b-[1px] outline-none ${
@@ -117,6 +125,7 @@ export default function SignUp() {
                   onChange={(e) => setPswdConfirm(e.target.value)}
                   placeholder="Confirmer le mot de passe"
                   required
+                  autocomplete="new-password"
                 />
                 {passwordErr && (
                   <span className="text-red-500 semi-bold">

@@ -1,6 +1,8 @@
 const connect = require("../database/database");
 
 exports.getCarAll = async (req, res) => {
+  console.log("test");
+
   try {
     console.log("query running....");
     const rows = await connect.pool.query(

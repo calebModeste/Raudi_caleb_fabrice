@@ -36,6 +36,7 @@ export default function SignIn() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Mot de passe"
+                  autocomplete="new-password"
                 />
                 <button className="mt-5 bg-gray-950 transition hover:bg-gray-800 text-white py-4">
                   Se Connecter à my Raudi
