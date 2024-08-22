@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const entityController = require("../controller/entityController");
+const entityController = require("../controller/entityController example");
 
 
 
