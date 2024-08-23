@@ -1,4 +1,5 @@
 const connect = require("../database/database");
+const byCrypt = require('bcrypt')
 
 
 exports.getCarAll = async (req, res) => {
@@ -26,3 +27,17 @@ exports.getCarById = async (req, res) => {
     console.log("erreur", error);
   }
 };
+
+exports.registerCar = async (req,res)=>{
+  const {idCar} = req.body
+
+  try {
+    const serieCode =  await byCrypt.hash('raudi_model',1);
+    await connect.pool.query("INSERT INTO car(IdModel, serieCode) VALUES (?,?)",[idCar,serieCode])
+
+    res.status(200).json({success:'it push'})
+
+  } catch (error) {
+    console.log(error)
+  }
+}

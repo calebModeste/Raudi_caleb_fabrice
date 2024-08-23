@@ -12,5 +12,8 @@ router.get('/cars', carController.getCarAll)
 router.get('/cars/:id',carController.getCarById)
 
 
+router.post('/car/push',carController.registerCar)
+
+
 
 module.exports = router;
