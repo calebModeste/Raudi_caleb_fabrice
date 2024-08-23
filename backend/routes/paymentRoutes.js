@@ -10,6 +10,7 @@ const paymentController = require("../controller/paymentController");
 ======================*/
 router.get('/entities/', paymentController.getPaymentAll)
 
+router.post('/payNow/', paymentController.Payed)
 
 
 module.exports = router;

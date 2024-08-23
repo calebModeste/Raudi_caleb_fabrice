@@ -10,11 +10,12 @@ const usersController = require("../controller/usersController");
 ======================*/
 router.get('/users', usersController.getUserAll)
 router.get('/users/:id',usersController.getUserById)
-
-
 router.get("/userId/passwordUpdate", usersController.updatePasswordById);
 
 
+/**===================
+ *         POST
+======================*/
 router.post('/login',usersController.login)
 router.post('/register',usersController.register)
 
