@@ -11,11 +11,18 @@ exports.getPaymentAll = async (req, res) => {
     console.log("erreur", error);
   }
 };
+
+
+
 exports.Payed = async(req,res) =>{
-  const {price} = req.body
+  const {idUser,idCar,price} = req.body
 
   try {
+
+
     await connect.pool.query("",[])
+
+
     res.status(200).json({sucess:'query sucessfull'})
   } catch (error) {
       console.log("erreur", error);
