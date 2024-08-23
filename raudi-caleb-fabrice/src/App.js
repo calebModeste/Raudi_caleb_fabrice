@@ -6,6 +6,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import CarId from "./pages/CarId";
+import { Toaster } from "react-hot-toast";
+import PaymentPage from "./pages/PaymentPage";
 
 function App() {
   return (
@@ -13,6 +15,10 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Layout children={<Homepage />} />} />
+          <Route
+            path="/payments"
+            element={<Layout children={<PaymentPage />} />}
+          />
           <Route path="/cars/:id" element={<Layout children={<CarId />} />} />
           <Route
             path="/dashboard"
@@ -22,6 +28,7 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
         </Routes>
       </Router>
+      <Toaster />
     </div>
   );
 }

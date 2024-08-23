@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AudiVolant from "../assets/audi-volant.jpg";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -8,20 +10,43 @@ export default function SignUp() {
   const [pswdConfirm, setPswdConfirm] = useState("");
   const [emailErr, setEmailErr] = useState(false);
   const [passwordErr, setPasswordErr] = useState(false);
+  const navigate = useNavigate();
 
   const validEmail = new RegExp(
     "^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
   );
   const validPassword = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
 
+  useEffect(() => {
+    const token = localStorage.getItem("tokken");
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
   async function signUpUser(credentials) {
-    return await fetch("http://localhost:3000/raudi/api/users/sign-up", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    }).then((data) => data.json());
+    try {
+      const response = await fetch("http://localhost:5000/raudiApi/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Sign up failed");
+      }
+
+      localStorage.setItem("token", data.tokken);
+      toast.success("Utilisateur créé avec succès");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Sign up error:", error.message);
+      toast.error(error.message);
+    }
   }
 
   const validate = () => {
@@ -48,12 +73,11 @@ export default function SignUp() {
     e.preventDefault();
 
     if (validate()) {
-      let res = await signUpUser({
+      await signUpUser({
         name,
         email,
         pswd,
       });
-      console.log(res);
     }
   };
 
@@ -76,7 +100,7 @@ export default function SignUp() {
 
               <form
                 onSubmit={handleSubmit}
-                autocomplete="false"
+                autoComplete="off"
                 className="flex flex-col gap-8"
               >
                 <input
@@ -88,7 +112,7 @@ export default function SignUp() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Nom et Prénom"
                   required
-                  autocomplete="false"
+                  autoComplete="off"
                 />
                 <input
                   className={`px-1 py-2 border-b-[1px] outline-none ${
@@ -99,7 +123,7 @@ export default function SignUp() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email"
                   required
-                  autocomplete="false"
+                  autoComplete="off"
                 />
                 {emailErr && (
                   <span className="text-red-500">Email non valide</span>
@@ -113,8 +137,7 @@ export default function SignUp() {
                   onChange={(e) => setPswd(e.target.value)}
                   placeholder="Mot de passe"
                   required
-                  autocomplete="new-password"
-                  auto
+                  autoComplete="new-password"
                 />
                 <input
                   className={`px-1 py-2 border-b-[1px] outline-none ${
@@ -125,10 +148,9 @@ export default function SignUp() {
                   onChange={(e) => setPswdConfirm(e.target.value)}
                   placeholder="Confirmer le mot de passe"
                   required
-                  autocomplete="new-password"
                 />
                 {passwordErr && (
-                  <span className="text-red-500 semi-bold">
+                  <span className="text-red-500">
                     Le mot de passe doit contenir au moins 6 caractères et
                     contenir à la fois des lettres et des chiffres, et les mots
                     de passe doivent correspondre.
