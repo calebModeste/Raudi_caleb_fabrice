@@ -5,7 +5,7 @@ require('dotenv').config()
 
 exports.getUserAll = async (req, res) => {
   try {
-    console.log("query running....",[nom, prenom]);
+    console.log("query running....");
     const rows = await connect.pool.query("SELECT * FROM users");
     res.status(200).json(rows);
   } catch (error) {
@@ -36,7 +36,7 @@ exports.register = async (req, res) => {
       res.status(400).json({ error: "user exist" });
     }
       const hash = await bycript.hash(password, 10);
-       await connect.pool.query(
+      await connect.pool.query(
         "INSERT INTO users (name, mail, password) VALUES (?,?,?)",[
           name, mail, hash
         ]
@@ -45,8 +45,8 @@ exports.register = async (req, res) => {
         expiresIn: "1h",
       });
       res.json({ tokken });
-    
-  } catch (error) {
+      
+    } catch (error) {
     console.log(error);
     res.status(500).json({ error: "inscription no sucess" });
   }
@@ -61,13 +61,12 @@ exports.login = async (req, res) => {
       [mail]
     );
     const user = userValid[0];
-    console.log(user)
-
+    
     if (userValid.length === 0) {
       res.status(401).json({ error: "user mail not existe" });
     } else {
       const passwordCheck = await bycript.compare(password, user.password);
-
+      
       if (!passwordCheck) {
         res.status(401).json({ error: "user password not correct" });
       }
@@ -81,3 +80,36 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: "login no sucess" });
   }
 };
+
+
+exports.updatePasswordById = async (req,res)=>{
+
+
+  const {id,password} = req.body
+  const hash = await bycript.hash(password, 10);
+  try {
+    console.log("query running....");
+    
+    await connect.pool.query(
+      "UPDATE users SET password = ? WHERE ?",
+      [hash,id]
+    );
+    res.status(200).json({sucess:'operaton sucess'});
+  } catch (error) {
+    console.log("erreur", error);
+  }
+};
+
+
+
+exports.deleteUsers = async (req,res) =>{
+  let id = parseInt(req.params.id)
+
+  try {
+    await connect.pool.query("DELETE FROM `users` WHERE id = ?",[id]);
+
+    res.status(200).json({ sucess: "operaton sucess" });
+  } catch (error) {
+    console.log(error)
+  }
+}
