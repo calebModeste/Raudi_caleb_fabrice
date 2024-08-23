@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AudiVolant from "../assets/audi-volant.jpg";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -162,6 +162,14 @@ export default function SignUp() {
                 >
                   S'inscrire à my Raudi
                 </button>
+
+                <p className="text-xs mb-10 ">
+                  Vous avez un compte{" "}
+                  <Link to="/sign-in">
+                    my <span className="text-red-500 font-semibold">Raudi</span>
+                  </Link>
+                  ?
+                </p>
               </form>
             </div>
           </div>

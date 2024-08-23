@@ -1,7 +1,7 @@
 import React from "react";
 import AudiVolant from "../assets/audi-volant.jpg";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignIn() {
   const [email, setEmail] = React.useState("");
@@ -138,6 +138,14 @@ export default function SignIn() {
                 >
                   Se Connecter à my Raudi
                 </button>
+
+                <p className="text-xs mb-10">
+                  Vous êtes nouveau sur{" "}
+                  <Link to="/sign-up">
+                    my <span className="text-red-500 font-semibold">Raudi</span>{" "}
+                  </Link>
+                  ?
+                </p>
 
                 {error && <p className="text-red-500">{error}</p>}
               </div>

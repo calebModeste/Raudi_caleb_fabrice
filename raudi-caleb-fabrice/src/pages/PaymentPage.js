@@ -124,14 +124,14 @@ export default function PaymentPage() {
           >
             <div className="text-gray-600">
               <p className="text-sm">
-                Code de la facture:{" "}
+                Code de la facture :{" "}
                 <span className="font-semibold">{payment.serieCode}</span>
               </p>
               <p className="text-sm">
-                De: <span className="font-semibold">{payment.name}</span>
+                De : <span className="font-semibold">{payment.name}</span>
               </p>
               <p className="text-sm">
-                Date d'achat:{" "}
+                Date d'achat :{" "}
                 <span className="font-semibold">
                   {new Date(payment.datePayment).toLocaleDateString("fr-FR")}
                 </span>
@@ -147,7 +147,7 @@ export default function PaymentPage() {
       <div className="flex flex-col md:flex-row w-4/5 md:w-3/5 gap-6">
         <div className="bg-white shadow-lg rounded-lg p-6 w-full md:w-1/2">
           <h3 className="text-lg font-semibold mb-4 text-gray-700">
-            Gains mensuels
+            Gains mensuels :
           </h3>
           <ul className="text-gray-600">
             {Object.keys(monthlyGains).map((monthYear) => {
@@ -166,7 +166,7 @@ export default function PaymentPage() {
 
         <div className="bg-white shadow-lg rounded-lg p-6 w-full md:w-1/2">
           <h3 className="text-lg font-semibold mb-4 text-gray-700">
-            Prix total de tous les paiements
+            Prix total de tous les paiements :
           </h3>
           <p className="text-2xl font-bold text-green-600">
             {payments.reduce((acc, payment) => acc + payment.prixTotal, 0)} €

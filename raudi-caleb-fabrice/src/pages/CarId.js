@@ -8,7 +8,6 @@ export default function CarId() {
   const params = useParams();
   const tokken = localStorage.getItem("tokken");
 
-  // Fetch car details
   const carId = async () => {
     const response = await fetch(
       `http://localhost:5000/raudiApi/cars/${params.id}`
@@ -17,22 +16,43 @@ export default function CarId() {
     setCar(data[0]);
   };
 
-  // Handle adding car to cart and navigating to the dashboard
   const handleAddToCart = () => {
+    // Vérifiez si l'utilisateur est connecté
     if (!tokken) {
       navigate("/sign-in");
       return;
     }
 
-    // Get existing cart from localStorage or initialize as empty array
-    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+    // Vérifiez si les données de la voiture sont disponibles
+    if (!car || Object.keys(car).length === 0) {
+      console.error("Car data is empty, cannot add to cart.");
+      return;
+    }
 
-    // Add the selected car to the cart
+    // Créez une clé unique basée sur le token de l'utilisateur
+    const userCartKey = `cart_${tokken}`;
+
+    // Récupérez le panier de l'utilisateur spécifique depuis le localStorage
+    const existingCart = JSON.parse(localStorage.getItem(userCartKey)) || [];
+
+    // Vérifiez si la voiture est déjà dans le panier
+    const isCarInCart = existingCart.some((item) => item.id === car.id);
+
+    if (isCarInCart) {
+      console.log("Car is already in the cart.");
+      return;
+    }
+
+    // Mettez à jour le panier avec la nouvelle voiture
     const updatedCart = [...existingCart, car];
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
 
-    // Redirect to the dashboard with the car info
-    navigate("/dashboard", { state: { car } });
+    // Sauvegardez le panier mis à jour dans le localStorage avec la clé spécifique à l'utilisateur
+    localStorage.setItem(userCartKey, JSON.stringify(updatedCart));
+
+    // Naviguez vers le tableau de bord
+    navigate("/dashboard");
+
+    console.log("Voiture ajoutée :", car);
   };
 
   React.useEffect(() => {

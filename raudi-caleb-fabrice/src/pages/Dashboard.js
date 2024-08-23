@@ -30,6 +30,11 @@ export default function Dashboard() {
 
         const data = await response.json();
         setUser(data);
+
+        // Chargez le panier spécifique à l'utilisateur
+        const userCartKey = `cart_${tokken}`;
+        const userCart = JSON.parse(localStorage.getItem(userCartKey)) || [];
+        setCart(userCart);
       } catch (err) {
         setError(err.message);
         console.error("Error fetching user:", err.message);
@@ -42,28 +47,27 @@ export default function Dashboard() {
     getUser();
   }, [navigate]);
 
-  React.useEffect(() => {
-    const loadCart = () => {
-      const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-      setCart(cartItems);
-    };
+  const handleSelectCar = (car) => {
+    const tokken = localStorage.getItem("tokken"); // Assurez-vous que tokken est récupéré ici
+    if (!tokken) {
+      navigate("/sign-in");
+      return;
+    }
 
-    loadCart();
-  }, []);
-
-  React.useEffect(() => {
-    const loadSelectedCar = () => {
-      const car = JSON.parse(localStorage.getItem("selectedCar")) || null;
-      setSelectedCar(car);
-    };
-
-    loadSelectedCar();
-  }, []);
+    const userCartKey = `cart_${tokken}`; // Clé unique pour chaque utilisateur
+    const existingCart = JSON.parse(localStorage.getItem(userCartKey)) || [];
+    const updatedCart = [...existingCart, car]; // Ajoutez la voiture au panier
+    localStorage.setItem(userCartKey, JSON.stringify(updatedCart));
+    setCart(updatedCart); // Mettez à jour l'état local
+    setSelectedCar(car);
+  };
 
   const removeFromCart = (carId) => {
-    const updatedCart = cart.filter((item) => item.id !== carId);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setCart(updatedCart);
+    const tokken = localStorage.getItem("tokken"); // Récupérez le tokken ici aussi
+    const userCartKey = `cart_${tokken}`;
+    const updatedCart = cart.filter((item) => item.id !== carId); // Filtrez le panier pour supprimer la voiture
+    localStorage.setItem(userCartKey, JSON.stringify(updatedCart)); // Mettez à jour le localStorage
+    setCart(updatedCart); // Mettez à jour l'état local
   };
 
   if (error) {
@@ -73,6 +77,7 @@ export default function Dashboard() {
   if (!user) {
     return <div>Chargement...</div>;
   }
+
   const renderRoleBasedContent = () => {
     switch (user?.role) {
       case 1:
@@ -89,51 +94,77 @@ export default function Dashboard() {
           </div>
         );
       case 3:
-        return <div>Espace Administrateur</div>;
+        return (
+          <div>
+            <div className="bg-sky-200 w-full flex flex-row  font-semibold uppercase shadow-md py-2 gap-x-20 justify-center">
+              <p className=" ">Espace Administrateur</p>
+              <Link to="/new-car" className="">
+                Creer un nouveau modèle de voiture
+              </Link>
+            </div>
+          </div>
+        );
       default:
         navigate("/sign-in");
     }
   };
+
   return (
     <div>
       {renderRoleBasedContent()}
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold">Panier</h2>
+      <div className="mt-10 p-6">
+        <h2 className="text-2xl font-bold mb-5">
+          {cart.length === 0
+            ? "Vous avez aucune Raudi selectionnée"
+            : "Raudi selectionnée :"}
+        </h2>
         {cart.length === 0 ? (
           <p>Votre panier est vide.</p>
         ) : (
-          <ul className="list-disc pl-5">
+          <div className="pl-5 flex flex-col items-center">
             {cart.map((item) => (
-              <li
+              <div
                 key={item.id}
-                className="flex justify-between items-center py-2 border-b"
+                className="flex flex-col px-10 py-10 shadow-xl rounded-md w-1/3 items-center border-b"
               >
-                <div>
-                  <p className="font-semibold">{item.nameModel}</p>
-                  <p className="text-sm">{item.basePrice} €</p>
+                <div className="flex px-5 font-bold py-10 flex-col  rounded-md  items-center">
+                  <div className="relative mb-5 bg-red-600 h-72 w-72 ">
+                    <img
+                      className="absolute h-full w-full  object-cover"
+                      src={item.picture}
+                      alt={item.nameModel}
+                    />
+                  </div>
+                  <div className="flex w-full  flex-col justify-start text-left">
+                    <p className="text-sm mb-5 font-semibold">
+                      Modèle de voiture : {item.nameModel}
+                    </p>
+                    <p className="text-sm">Prix TTC : {item.basePrice} €</p>
+                    <p className="text-sm">Nombre de portes : {item.doors} </p>
+                  </div>
+                  <p className="italic mt-10 text-gray-500 text-xs">
+                    Une fois votre commande envoyée, un conseiller vous
+                    contactera dans les 24 heures pour prendre en charge votre
+                    mode paiement ainsi que les choix particuliers.
+                  </p>
                 </div>
-                <button
-                  onClick={() => removeFromCart(item.id)}
-                  className="text-red-500"
-                >
-                  Supprimer
-                </button>
-              </li>
+                <div className="flex mt-5 justify-between gap-8">
+                  <button className="bg-sky-800 shadow-md text-white py-2 px-5 rounded-md">
+                    Faire une commande
+                  </button>
+
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="bg-red-500 text-white shadow-md py-2 px-5 rounded-md"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
-      {selectedCar && (
-        <div className="mt-10">
-          <h2 className="text-2xl font-bold">Voiture Sélectionnée</h2>
-          <div className="border p-4">
-            <p className="text-xl font-semibold">{selectedCar.nameModel}</p>
-            <p>Prix: {selectedCar.basePrice} €</p>
-            <p>Nombre de places: {selectedCar.place}</p>
-            <p>Nombre de portes: {selectedCar.doors}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
